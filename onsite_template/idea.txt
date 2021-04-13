@@ -1,0 +1,1 @@
+template that is not fully general but quick to implement and modify
