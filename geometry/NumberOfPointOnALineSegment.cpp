@@ -12,5 +12,5 @@ T npoint(pair<T,T> l,pair<T,T> r)//inclusive
         return x+1;
     }
     T g=__gcd(x,y);
-    return (x/g)+1;
+    return g+1;
 }

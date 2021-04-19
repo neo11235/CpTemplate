@@ -126,12 +126,12 @@ public:
         p1=l1;
         p2=l2;
     }
-    //not tested
+    //tested moderately
     bool checkIntersect(LineSegment2d<T> l)// works with T=integer
     {
-        if((l.p1-p1).cross(l.p2-p2)==0)
+        if((l.p1-p1).cross(l.p2-p1)==0&&(l.p1-p2).cross(l.p2-p2)==0)
         {
-            return intersect(p1.x,p2.x,l.p1.x,l.p2.x);
+            return intersect(p1.x,p2.x,l.p1.x,l.p2.x)&&intersect(p1.y,p2.y,l.p1.y,l.p2.y);
         }
         else
         {
@@ -141,13 +141,13 @@ public:
     }
     bool checkParallel(LineSegment2d<T> l)
     {
-        return abs((p2-p1).cross(l.p2-p1))<pres;//check for overflow
+        return abs((p2-p1).cross(l.p2-l.p1))<pres;//check for overflow
     }
     T evaluate(T x)//evaluate y at x of the line this segment is part of
     {
         return p1.y+(x-p1.x)*(p2.y-p1.y)/(p2.x-p1.x);
     }
-    //not tested
+    //its wrong
     bool interSection(LineSegment2d<T> l,LineSegment2d<T>& out)//designed for T=floating point numbers
     {
         if(!(intersect(p1.x,p2.x,l.p1.x,l.p2.x)&&intersect(p1.y,p2.y,l.p1.y,l.p2.y)))
