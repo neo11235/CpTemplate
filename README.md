@@ -1,2 +1,2 @@
 # CpTemplate
-My library for competetive programming
+My library for competitive programming
