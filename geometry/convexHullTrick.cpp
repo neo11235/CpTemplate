@@ -19,7 +19,7 @@ struct Line{
         y=m*x+c;
         return {x,y};
     }
-}
+};
 ll solve(vector<tuple<ll,ll,ll> >& rec)
 {
     sort(rec.begin(),rec.end());

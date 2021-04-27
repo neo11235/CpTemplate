@@ -242,4 +242,9 @@ public:
     {
         return query(1,0,n-1,l,r);
     }
+    ~SegTree()
+    {
+        if(n!=0&&sgt!=NULL)
+            delete[] sgt;
+    }
 };
