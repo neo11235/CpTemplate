@@ -183,7 +183,8 @@ public:
         this->propagate=propagate;
         n=sz;
         sgt=new T[4*sz];
-        build(1,0,n-1,data);
+        if(data!=NULL)
+            build(1,0,n-1,data);
     }
     void build(int v,int vl,int vr,T* data)
     {
