@@ -61,3 +61,101 @@ int main()
 
 /****Generalized implementation****/
 
+/**
+monotone slope and arbitrary point query
+runtime:    insert() O(1) average
+            query() log(n)
+**/
+struct Line{
+    long long m,c;//mx+c
+    Line(){
+        m=c=infl;
+    }
+    Line(ll m,ll c):m(m),c(c){}
+    long long operator()(long long x)
+    {
+        return m*x+c;
+    }
+    bool parallel(Line l)
+    {
+        return m==l.m;
+    }
+    pair<long double,long double> intersect(Line l)//assuming not parallel
+    {
+        long double x,y;
+        x=(long double)(l.c-c)/(m-l.m);
+        y=(long double)m*x+c;
+        return {x,y};
+    }
+};
+//cht with increasing order of slope
+//query in arbitrary order
+//querying for maximum
+//no parallel line
+struct CHT{
+    deque<Line> Q;
+    void insert(Line nl)
+    {
+        while(Q.size()>1&&Q.back().intersect(nl)<Q[Q.size()-2].intersect(nl))
+            Q.pop_back();
+        Q.push_back(nl);
+    }
+    ll query(ll x)
+    {
+        if(Q.size()==1)
+            return Q[0](x);
+        if(Q[0].intersect(Q[1]).first>=x)
+        {
+            return Q[0](x);
+        }
+        int l=1,r=(int)Q.size()-1;
+        while(r>l+1)
+        {
+            int mid=(l+r)/2;
+            if(Q[mid].intersect(Q[mid-1]).first<x)
+                l=mid;
+            else
+                r=mid;
+        }
+        return max(Q[l](x),Q[r](x));
+
+    }
+    void clear()
+    {
+        Q.clear();
+    }
+};
+//decreasing order of slope
+struct CHT2{
+    deque<Line> Q;
+    void insert(Line nl)
+    {
+        while(Q.size()>1&&Q[0].intersect(nl)>Q[1].intersect(nl))
+            Q.pop_front();
+        Q.push_front(nl);
+    }
+    ll query(ll x)
+    {
+        if(Q.size()==1)
+            return Q[0](x);
+        if(Q[0].intersect(Q[1]).first>=x)
+        {
+            return Q[0](x);
+        }
+        int l=1,r=(int)Q.size()-1;
+        while(r>l+1)
+        {
+            int mid=(l+r)/2;
+            if(Q[mid].intersect(Q[mid-1]).first<x)
+                l=mid;
+            else
+                r=mid;
+        }
+        return max(Q[l](x),Q[r](x));
+
+    }
+    void clear()
+    {
+        Q.clear();
+    }
+};
