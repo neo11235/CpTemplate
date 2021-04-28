@@ -75,3 +75,125 @@ void clearlct()
         lct[i].m=lct[i].c=infl;
 }
 ///********************************////////
+
+/**Class based implementation**/
+class LCT{
+    Line* lct;
+    int n;
+    bool mntree;
+    void updateMin(int v,int vl,int vr,Line nl)
+    {
+        if(lct[v].m==infl)
+        {
+            lct[v]=nl;
+            return;
+        }
+        if(vl==vr)
+        {
+            if(lct[v](vl)>nl(vl))
+                lct[v]=nl;
+            return;
+        }
+        if(lct[v].m>nl.m)
+            swap(lct[v],nl);
+        int mid=(vl+vr)/2;
+        if(nl(mid)>lct[v](mid))
+        {
+            updateMin(2*v,vl,mid,nl);
+        }
+        else
+        {
+            swap(lct[v],nl);
+            updateMin(2*v+1,mid+1,vr,nl);
+        }
+    }
+    void updateMax(int v,int vl,int vr,Line nl)
+    {
+        if(lct[v].m==infl)
+        {
+            lct[v]=nl;
+            return;
+        }
+        if(vl==vr)
+        {
+            if(lct[v](vl)<nl(vl))
+                lct[v]=nl;
+            return;
+        }
+        if(lct[v].m>nl.m)
+        {
+            swap(lct[v],nl);
+        }
+        int mid=(vl+vr)/2;
+        if(nl(mid)>lct[v](mid))
+        {
+            swap(lct[v],nl);
+            updateMax(2*v,vl,mid,nl);
+        }
+        else
+        {
+            updateMax(2*v+1,mid+1,vr,nl);
+        }
+    }
+    ll queryMin(int v,int vl,int vr,int indx)
+    {
+        if(vl==vr)
+        {
+            if(lct[v].m==infl)
+                return infl;
+            return lct[v](vl);
+        }
+        int mid=(vl+vr)/2;
+        ll res=infl;
+        if(lct[v].m!=infl)
+            res=lct[v](indx);
+        if(indx<=mid)
+            return min(res,queryMin(2*v,vl,mid,indx));
+        else
+            return min(res,queryMin(2*v+1,mid+1,vr,indx));
+    }
+    ll queryMax(int v,int vl,int vr,int indx)
+    {
+        if(vl==vr)
+        {
+            if(lct[v].m==infl)
+                return -infl;
+            return lct[v](vl);
+        }
+        int mid=(vl+vr)/2;
+        ll res=-infl;
+        if(lct[v].m!=infl)
+            res=lct[v](indx);
+        if(indx<=mid)
+            return max(res,queryMax(2*v,vl,mid,indx));
+        else
+            return max(res,queryMax(2*v+1,mid+1,vr,indx));
+    }
+public:
+    LCT(int sz,bool minTree=true)
+    {
+        n=sz;
+        mntree=minTree;
+        lct=new Line[4*n];
+    }
+    void update(Line nl)
+    {
+        if(mntree)
+            updateMin(1,0,n-1,nl);
+        else
+            updateMax(1,0,n-1,nl);
+    }
+    ll query(int x)
+    {
+        if(mntree)
+            return queryMin(1,0,n-1,x);
+        return queryMax(1,0,n-1,x);
+    }
+    ~LCT()
+    {
+        if(lct!=NULL)
+            delete[] lct;
+    }
+
+};
+/*****************************/
