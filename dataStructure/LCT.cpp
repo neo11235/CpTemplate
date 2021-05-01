@@ -284,6 +284,14 @@ class DynamicLCT{
             }
             return;
         }
+        if(v->l.m==nl.m)
+        {
+            if(nl(vl)>v->l(vl))
+            {
+                v->l=nl;
+            }
+            return;
+        }
         if(v->l.m>nl.m)
         {
             swap(v->l,nl);
@@ -298,7 +306,7 @@ class DynamicLCT{
         }
         else
         {
-            if(v->rht)
+            if(v->rht==NULL)
                 v->rht=new LctElement();
             updateMax(v->rht,mid+1,vr,nl);
         }
@@ -333,6 +341,8 @@ class DynamicLCT{
             return v->l(x);
         }
         ll res=-LL_MAX;
+        if(v->l.m!=LL_MAX)
+            res=v->l(x);
         int mid=(vl+vr)/2;
         if(x<=mid)
             return max(res,queryMax(v->lft,vl,mid,x));
