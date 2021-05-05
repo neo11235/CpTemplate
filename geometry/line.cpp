@@ -171,12 +171,13 @@ public:
     }
     T minDistance(vector2d<T> p)
     {
-        T d=min(abs(p-p1),abs(p-p2));
-        if((p2-p1).dot(p-p1)>=0&&(p1-p2).dot(p-p2)>=0)
+        vector2d<T> u=p2-p1;
+        double t=-(u.dot(p1-p))/u.dot(u);
+        if(t>-pres&&t<1.0+pres)
         {
-            d=min(d,((p2-p1).cross(p-p1))/abs(p2-p1));
+            return abs(p1+u*t-p);
         }
-        return d;
+        return min(abs(p-p1),abs(p-p2));
     }
 };
 const long double pres=1e-11;
