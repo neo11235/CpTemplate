@@ -21,6 +21,20 @@ struct Basis{
             mask^=basis[i];
         }
     }
+    bool check(int mask)
+    {
+        for(int i=0;i<30;i++)
+        {
+            if(!(mask&(1<<i)))
+                continue;
+            if(!basis[i])
+            {
+                return false;
+            }
+            mask^=basis[i];
+        }
+        return true;
+    }
     void insertVector2(int mask)
     {
         for(int i=29;i>=0;i--)
@@ -35,6 +49,20 @@ struct Basis{
             }
             mask^=basis[i];
         }
+    }
+    bool check2(int mask)
+    {
+        for(int i=29;i>=0;i--)
+        {
+            if(!(mask&(1<<i)))
+                continue;
+            if(!basis[i])
+            {
+                return false;
+            }
+            mask^=basis[i];
+        }
+        return true;
     }
     void clear()
     {
