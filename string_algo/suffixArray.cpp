@@ -32,6 +32,8 @@ vector<int> sortCyclicShifts(string const& s)
             cnt[c[pn[i]]]++;
         for(int i=1;i<classes;i++)
             cnt[i]+=cnt[i-1];
+        for(int i=n-1;i>=0;i--)
+            p[--cnt[c[pn[i]]]]=pn[i];
         cn[p[0]]=0;
         classes=1;
         for (int i = 1; i < n; i++) {
