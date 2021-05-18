@@ -209,6 +209,8 @@ public:
     }
     int lcpQuery(int i,int j)
     {
+        if(i==j)
+            return originalLen-i;
         int posi=pos[i];
         int posj=pos[j];
         if(posi>posj)
