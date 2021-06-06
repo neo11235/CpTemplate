@@ -1,3 +1,5 @@
+unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+linear_congruential_engine<uint_fast32_t, 1002517UL, 1001593UL, 2147483647UL> lcg(seed);
 int primes_for_mod[]={1000019353,1000001087,1000020353,1000003267,1000000439,1000018001,1000019569,1000020701,1000016929,1000007521,
                         1000007773,1000013323,1000018379,1000017203,1000006211,1000004693,1000013011,1000020829,1000011277,1000007147};
 int primes_for_base[]={1831,1061,5927,6689,7529,9719,3917,271,6029,6091,9719,2819,4877,9679,6373,6101,1039,4591,5531};
@@ -13,6 +15,10 @@ long long computeHash(const string& s,const long long p,const long long mod)
         pp=(pp*p)%mod;
     }
     return res;
+}
+pair<int,int> computeDHash(const string& s,long long p1,long long mod1,long long p2,long long mod2)
+{
+    return {(int)computeHash(s,p1,mod1),(int)computeHash(s,p2,mod2)};
 }
 
 /**class based implementation***/
@@ -32,31 +38,15 @@ struct SingularHash{//use a single prime number
     int* hashValue=NULL;
     int* pPower=NULL;
     int* pInv=NULL;
-    int n;
-    SingularHash()
-    {
-        n=-1;
-    }
+    int n=0;
+    SingularHash(){}
     SingularHash(int size,long long mod,long long p)
     {
-        n=size;
-        this->mod=mod;
-        this->p=p;
-        pinv=modular_exp(p,mod-2,mod);
-        hashValue=new int[size];
-        pPower=new int[size];
-        pInv=new int[size];
+        reset(size,mod,p);
     }
     SingularHash(const string& s,long long mod,long long p)
     {
-        n=(int)s.size();
-        this->mod=mod;
-        this->p=p;
-        hashValue=new int[n];
-        pPower=new int[n];
-        pInv=new int[n];
-        pinv=modular_exp(p,mod-2,mod);
-        construct(s);
+        reset(s,mod,p);
     }
     void construct(const string& s)
     {
@@ -86,9 +76,36 @@ struct SingularHash{//use a single prime number
         return (int)((res+(((long long)hashValue[r]*pPower[n-l])%mod))%mod);
 
     }
-    ~SingularHash()
+    void reset(int size,long long mod,long long p)
     {
-        if(n!=-1)
+        destroy();
+        n=size;
+        this->mod=mod;
+        this->p=p;
+        allocateMemory();
+        pinv=modular_exp(p,mod-2,mod);
+    }
+    void reset(const string &s,long long mod,long long p)
+    {
+        destroy();
+        n=(int)s.size();
+        this->mod=mod;
+        this->p=p;
+        allocateMemory();
+        pinv=modular_exp(p,mod-2,mod);
+        construct(s);
+    }
+    void allocateMemory()
+    {
+        if(n<=0)
+            return;
+        hashValue=new int[n];
+        pPower=new int[n];
+        pInv=new int[n];
+    }
+    void destroy()
+    {
+        if(n!=0)
         {
             if(hashValue!=NULL)
                 delete[] hashValue;
@@ -97,6 +114,50 @@ struct SingularHash{//use a single prime number
             if(pInv!=NULL)
                 delete[] pInv;
         }
+    }
+    ~SingularHash()
+    {
+        destroy();
+    }
+};
+void initializeHash(SingularHash& hsh,const string& s)
+{
+    int cm=lcg()%(sizeof(primes_for_mod)/sizeof(int));
+    int cp=lcg()%(sizeof(primes_for_base)/sizeof(int));
+    ll mod=primes_for_mod[cm];
+    ll p=primes_for_base[cp];
+    hsh.reset(s,mod,p);
+}
+struct doubleHash{//not tested in contest
+    SingularHash sh1,sh2;
+    doubleHash(){}
+    doubleHash(const string& s)
+    {
+        reset(s);
+    }
+    void reset(const string & s)
+    {
+        int cm=lcg()%(sizeof(primes_for_mod)/sizeof(int));
+        int cp=lcg()%(sizeof(primes_for_base)/sizeof(int));
+        int cm2=cm,cp2=cp;
+        while(cm2==cm)
+        {
+            cm2=lcg()%(sizeof(primes_for_mod)/sizeof(int));
+        }
+        while(cp2==cp)
+        {
+            cp2=lcg()%(sizeof(primes_for_base)/sizeof(int));
+        }
+        sh1.reset(s,primes_for_mod[cm],primes_for_base[cp]);
+        sh2.reset(s,primes_for_mod[cm2],primes_for_base[cp2]);
+    }
+    pii subArray(int l,int r)//inclusive,hash of the subarray [l,r]
+    {
+        return {sh1.subArray(l,r),sh2.subArray(l,r)};
+    }
+    pii cyclicSubArray(int l,int r)//inclusive
+    {
+        return {sh1.cyclicSubArray(l,r),sh2.cyclicSubArray(l,r)};
     }
 };
 /**************************************************************************/
