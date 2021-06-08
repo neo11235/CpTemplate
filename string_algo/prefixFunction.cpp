@@ -22,6 +22,22 @@ void pi_function(string const &str,vector<int> & pi)
     }
     return;
 }
+//computes number of occurrences of each prefix
+void noc(vector<int>& pi,vector<int>& res,int n)
+{
+    assert((int)res.size()>n&&(int)pi.size()>=n);
+    fill(res.begin(),res.begin()+n+1,0);
+    for(int i=0;i<n;i++)
+    {
+        ++res[pi[i]];
+    }
+    for(int i=n-1;i>0;i--)
+    {
+        res[pi[i-1]]+=res[i];
+    }
+    for(int i=0;i<=n;i++)
+        ++res[i];
+}
 //computes pi(s1+'#'+s2)
 //tested only once
 void pi_function(string const& s1,string const& s2,vector<int> &pi)
