@@ -4,7 +4,14 @@ int primes_for_mod[]={1000019353,1000001087,1000020353,1000003267,1000000439,100
                         1000007773,1000013323,1000018379,1000017203,1000006211,1000004693,1000013011,1000020829,1000011277,1000007147};
 int primes_for_base[]={1831,1061,5927,6689,7529,9719,3917,271,6029,6091,9719,2819,4877,9679,6373,6101,1039,4591,5531};
 
-
+struct PairHash
+{
+    template <class T1, class T2>
+    std::size_t operator() (const std::pair<T1, T2> &pair) const
+    {
+        return std::hash<T1>()(pair.first) ^ std::hash<T2>()(pair.second);
+    }
+};
 long long computeHash(const string& s,const long long p,const long long mod)
 {
     long long res=0;
@@ -15,6 +22,26 @@ long long computeHash(const string& s,const long long p,const long long mod)
         pp=(pp*p)%mod;
     }
     return res;
+}
+void computeRHash(const string& s,long long mod,long long p,vi& hval)
+{
+    hval[0]=s[0];
+    int n=(int)s.length();
+    for(int i=1;i<n;i++)
+    {
+        hval[i]=((ll)hval[i-1]*p+s[i])%mod;
+    }
+}
+void computeFHash(const string&s,long long mod,long long p,vi& hval)
+{
+    int n=(int)s.length();
+    hval[0]=s[0];
+    ll pp=1;
+    for(int i=1;i<n;i++)
+    {
+        pp=(pp*p)%mod;
+        hval[i]=(hval[i-1]+pp*s[i])%mod;
+    }
 }
 pair<int,int> computeDHash(const string& s,long long p1,long long mod1,long long p2,long long mod2)
 {
@@ -128,12 +155,17 @@ void initializeHash(SingularHash& hsh,const string& s)
     ll p=primes_for_base[cp];
     hsh.reset(s,mod,p);
 }
-struct doubleHash{//not tested in contest
+struct DoubleHash{//not tested in contest
     SingularHash sh1,sh2;
-    doubleHash(){}
-    doubleHash(const string& s)
+    DoubleHash(){}
+    DoubleHash(const string& s)
     {
         reset(s);
+    }
+    DoubleHash(const string&s,DoubleHash& sync)
+    {
+        sh1.reset(s,sync.sh1.mod,sync.sh1.p);
+        sh2.reset(s,sync.sh2.mod,sync.sh2.p);
     }
     void reset(const string & s)
     {
