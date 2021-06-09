@@ -38,6 +38,22 @@ void noc(vector<int>& pi,vector<int>& res,int n)
     for(int i=0;i<=n;i++)
         ++res[i];
 }
+//pass s+'#' and its computed prefix function
+//length of aut should be n
+void computeAutomation(const string &s,vector<int>& pi,int aut[][26])
+{
+    int n=(int)s.size();
+    for(int i=0;i<n;i++)
+    {
+        for(int c=0;c<26;c++)
+        {
+            if(i>0&&s[i]!='a'+c)
+                aut[i][c]=aut[pi[i-1]][c];
+            else
+                aut[i][c]=i+('a'+c==s[i]);
+        }
+    }
+}
 //computes pi(s1+'#'+s2)
 //tested only once
 void pi_function(string const& s1,string const& s2,vector<int> &pi)
