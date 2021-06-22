@@ -12,6 +12,7 @@ void pi_function(char* str,int sz,int* pi){//prefix function
 void pi_function(string const &str,vector<int> & pi)
 {
     int sz=str.length();
+    assert(sz<=(int)pi.size());
     pi[0]=0;
     int i,j;
     for(i=1;i<sz;i++){
@@ -42,6 +43,7 @@ void noc(vector<int>& pi,vector<int>& res,int n)
 //length of aut should be n
 void computeAutomation(const string &s,vector<int>& pi,int aut[][26])
 {
+    assert(aut);
     int n=(int)s.size();
     for(int i=0;i<n;i++)
     {
