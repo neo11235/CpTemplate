@@ -418,7 +418,8 @@ namespace AC{
         {
             v=q.front();
             q.pop();
-            st.push(v);
+            if(trie[v].leaf!=-1)
+                st.push(v);
             for(int i=0;i<AlphabetSize;++i)
             {
                 if(trie[v].next[i]!=-1)
@@ -431,8 +432,6 @@ namespace AC{
         {
             v=st.top();
             st.pop();
-            if(trie[v].leaf==-1)
-                continue;
             ans[trie[v].leaf]+=nMatch[v];
             nMatch[trie[v].vlink]+=nMatch[v];
         }
