@@ -402,6 +402,7 @@ namespace SA{
     const int N=1e6+5;
     const int log_N=21;
     const int ALPHA= 155;
+    //sa=suffix array,rnk=position array,hg=lcp array
     int sa[N],ra[N],rnk[N],hg[N],n;
     int wa[N],wb[N],wws[N],wv[N];
     int lg[N], st[N][log_N];
@@ -462,6 +463,15 @@ namespace SA{
         pr--;
         int x=lg[pr-pl+1];
         return min(st[pl][x],st[pr-(1<<x)+1][x]);
+    }
+    long long numberOfDistinctSubString(int len)//length of string s,not s+'#'
+    {
+        long long ans=1ll*len*(len+1)/2;
+        for(int i=1;i<=len;++i)
+        {
+            ans-=SA::hg[i];
+        }
+        return ans;
     }
 }
 /*********************************************************************/
