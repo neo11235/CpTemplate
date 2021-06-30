@@ -196,6 +196,7 @@ public:
         int mid=(vl+vr)/2;
         build(2*v,vl,mid,data);
         build(2*v+1,mid+1,vr,data);
+        sgt[v]=combine(sgt[2*v],sgt[2*v+1]);
     }
     void update(int v,int vl,int vr,int l,int r,T unp)
     {
