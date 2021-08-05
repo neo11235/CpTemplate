@@ -148,3 +148,104 @@ namespace _2stack
     };
 }
 /**************************************/
+/*************** oop implementation 2****************/
+namespace _2stack
+{
+    template<typename T,typename Combine,typename ResT=T>// combine function object must have 2 overloaded () operator
+    struct stack{
+        vector<T> data;
+        vector<ResT> res;
+        Combine combine;
+        stack(){}
+        void push(T element)
+        {
+            data.push_back(element);
+            if(!res.empty())
+                res.push_back(combine(element,res.back()));
+            else
+                res.push_back(combine(element));
+        }
+        T pop()
+        {
+            assert(!data.empty());
+            T retval=data.back();
+            data.pop_back();
+            res.pop_back();
+            return retval;
+        }
+        void clear()
+        {
+            data.clear();
+            res.clear();
+        }
+        ResT peek()
+        {
+            assert(!res.empty());
+            return res.back();
+        }
+        bool empty()
+        {
+            return data.empty();
+        }
+    };
+
+    template<typename T,typename Combine,typename ResT=T>
+    struct queue{
+        stack<T,Combine,ResT> b,f;//back and front
+        Combine combine;
+        queue(){}
+        void clear()
+        {
+            b.clear();
+            f.clear();
+        }
+        void push(T element)
+        {
+            f.push(element);
+        }
+        void pop()
+        {
+            if(b.empty())
+            {
+                while(!f.empty())
+                {
+                    b.push(f.pop());
+                }
+            }
+            if(b.empty())
+                return;
+            b.pop();
+        }
+        ResT getResult()
+        {
+            if(f.empty())
+            {
+                if(b.empty())
+                {
+                    return (ResT)0;///ResT must have converting constructor if its a user defined class
+                }
+                return b.peek();
+            }
+            else if(b.empty())
+            {
+                return f.peek();
+            }
+            return combine(f.peek(),b.peek());
+        }
+
+    };
+}
+///Example
+struct func
+{
+    ll operator()(ll a,ll b)
+    {
+        return __gcd(a,b);
+    }
+    ll operator()(ll a)
+    {
+        return a;
+    }
+};
+_2stack::queue<ll,func> Q;
+/*****************************************/
