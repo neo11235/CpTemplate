@@ -49,3 +49,102 @@ void clear()
         s2.pop();
 }
 /*************************************/
+
+/***********oop implementation*************/
+namespace _2stack
+{
+    template<class T,class ResT=T>
+    struct stack{
+        vector<T> data;
+        vector<ResT> res;
+        ResT zeroElement;
+        ResT (*combine)(T,ResT);
+        stack(){}
+        stack(ResT zeroElement,ResT (*combine)(T,ResT))
+        {
+            this->zeroElement=zeroElement;
+            this->combine=combine;
+            res.push_back(zeroElement);
+        }
+        void set(ResT zeroElement,ResT (*combine)(T,ResT))
+        {
+            this->zeroElement=zeroElement;
+            this->combine=combine;
+            if(res.empty())
+                res.push_back(zeroElement);
+        }
+        void push(T element)
+        {
+            data.push_back(element);
+            res.push_back(combine(element,res.back()));
+        }
+        T  pop()
+        {
+            T retval=data.back();
+            data.pop_back();
+            res.pop_back();
+            return retval;
+        }
+        void clear()
+        {
+            data.clear();
+            res.clear();
+            res.push_back(zeroElement);
+        }
+        ResT peek()
+        {
+            return res.back();
+        }
+        bool empty()
+        {
+            return data.empty();
+        }
+    };
+
+    template<class T,class ResT=T>
+    struct queue{
+        stack<T,ResT> b,f;//back and front
+        ResT (*combine)(T,ResT);
+        queue(){}
+        queue(ResT zeroElement,ResT (*combine)(T,ResT))
+        {
+            this->combine=combine;
+            b.set(zeroElement,combine);
+            f.set(zeroElement,combine);
+        }
+        void set(ResT zeroElement,ResT (*combine)(T,ResT))
+        {
+            b.set(zeroElement,combine);
+            f.set(zeroElement,combine);
+            this->combine=combine;
+        }
+        void clear()
+        {
+            b.clear();
+            f.clear();
+        }
+        void push(T element)
+        {
+            f.push(element);
+        }
+        void pop()
+        {
+            if(b.empty())
+            {
+                while(!f.empty())
+                {
+                    b.push(f.pop());
+                }
+            }
+            if(b.empty())
+                return;
+            b.pop();
+        }
+        ResT getResult()
+        {
+            return combine(f.peek(),b.peek());
+        }
+
+    };
+}
+/**************************************/
