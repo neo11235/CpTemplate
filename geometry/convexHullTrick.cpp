@@ -170,12 +170,48 @@ class MonotoneCHT{
     int type;
     void insertBack(Line nl)
     {
+        //handle parallel line insertion,there cannot be more than one parallel line to new line currently inside Q;
+        if(!Q.empty()&&Q.back().parallel(nl))
+        {
+            if(type<2)
+            {
+                if(Q.back().c>nl.c)
+                    Q.pop_back();
+                else
+                    return;
+            }
+            else
+            {
+                if(Q.back().c<nl.c)
+                    Q.pop_back();
+                else
+                    return;
+            }
+        }
         while(Q.size()>1&&Q.back().intersect(nl)<Q[Q.size()-2].intersect(nl))
             Q.pop_back();
         Q.push_back(nl);
     }
     void insertFront(Line nl)
     {
+        //handle parallel line insertion,there cannot be more than one parallel line to new line currently inside Q;
+        if(!Q.empty()&&Q[0].parallel(nl))
+        {
+            if(type<2)
+            {
+                if(Q[0].c>nl.c)
+                    Q.pop_front();
+                else
+                    return;
+            }
+            else
+            {
+                if(Q[0].c<nl.c)
+                    Q.pop_front();
+                else
+                    return;
+            }
+        }
         while(Q.size()>1&&Q[0].intersect(nl)>Q[1].intersect(nl))
             Q.pop_front();
         Q.push_front(nl);
@@ -196,6 +232,7 @@ class MonotoneCHT{
         return {l,r};
     }
 public:
+    //slope increasing or decreasing(not query point,query point is arbitrary),querying for maximum or minimum
     MonotoneCHT(bool increasing,bool maximum)
     {
         type=increasing;
