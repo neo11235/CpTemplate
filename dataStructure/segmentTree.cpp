@@ -174,10 +174,10 @@ class SegTree{
     T* sgt;
     ///combine must clear out any unpropagated value
     T (*combine)(T,T);
-    T (*propagate)(T,T,int);
+    T (*propagate)(T to,T from,int);
     int n;
 public:
-    SegTree(T* data,int sz,T(*combine)(T,T),T(*propagate)(T,T,int))
+    SegTree(int sz,T(*combine)(T,T),T(*propagate)(T,T,int),T* data=NULL)
     {
         this->combine=combine;
         this->propagate=propagate;
