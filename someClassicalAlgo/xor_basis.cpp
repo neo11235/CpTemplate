@@ -70,4 +70,80 @@ struct Basis{
         sz=0;
     }
 };
-/*******************************/
+/**************************************/
+
+/********64bit implementation**********/
+struct Basis{
+    typedef unsigned long long ULL;
+    ULL basis[64];
+    int size=0;
+    Basis(){clear();}
+    //maintain lower right triangle matrix
+    //should be used when max xor required
+    //returns false when mask already present in vector space
+    bool insertVectorLT(ULL mask,vector<pair<int,pair<ULL,ULL>>>& sol)
+    {
+        for(int i=63;i>=0;--i)
+        {
+            if(!((mask>>i)&1))
+                continue;
+            if(!basis[i])
+            {
+                basis[i]=mask;
+                return true;
+            }
+            sol.push_back(mp(1,mp(mask,basis[i])));
+            mask^=basis[i];
+        }
+        return false;
+    }
+    bool checkLT(ULL mask)
+    {
+        for(int i=63;i>=0;--i)
+        {
+            if(!((mask>>i)&1))
+                continue;
+            if(!basis[i])
+            {
+                return false;
+            }
+            mask^=basis[i];
+        }
+        return true;
+    }
+    //returns a bitmask such that xor of basis[setbit]=mask
+    //checkLT(mask) should be true before calling this function
+    ULL linearCombiLT(ULL mask)
+    {
+        ULL res=0;
+        for(int i=63;i>=0;--i)
+        {
+            if(!((mask>>i)&1))
+                continue;
+            mask^=basis[i];
+            res|=(1ull<<i);
+        }
+        return res;
+    }
+    ULL max()
+    {
+        ULL res=0;
+        for(int i=63;i>=0;--i)
+        {
+            if((res>>i)&1)
+                continue;
+            res^=basis[i];
+        }
+        return res;
+    }
+    ULL& operator[](int indx)
+    {
+        return basis[indx];
+    }
+    void clear()
+    {
+        memset(basis,0,sizeof(basis));
+        size=0;
+    }
+};
+/********************************************************/
