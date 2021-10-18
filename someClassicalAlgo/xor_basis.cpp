@@ -78,10 +78,10 @@ struct Basis{
     ULL basis[64];
     int size=0;
     Basis(){clear();}
-    //maintain lower right triangle matrix
+    //maintain lower right triangle matrix(assuming matrix column numbered from 64 to 1)
     //should be used when max xor required
     //returns false when mask already present in vector space
-    bool insertVectorLT(ULL mask,vector<pair<int,pair<ULL,ULL>>>& sol)
+    bool insertVectorLT(ULL mask)
     {
         for(int i=63;i>=0;--i)
         {
@@ -90,9 +90,9 @@ struct Basis{
             if(!basis[i])
             {
                 basis[i]=mask;
+                ++size;
                 return true;
             }
-            sol.push_back(mp(1,mp(mask,basis[i])));
             mask^=basis[i];
         }
         return false;
