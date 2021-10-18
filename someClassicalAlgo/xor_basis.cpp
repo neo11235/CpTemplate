@@ -147,3 +147,82 @@ struct Basis{
     }
 };
 /********************************************************/
+///not tested but should be ok,runtime of each operation
+///is O(SIZE),except clear() which is O(SIZE^2)
+/******************General implementation***************/
+template<int SIZE=64>
+struct Basis{
+
+    bitset<SIZE> basis[SIZE];
+    int size=0;
+    Basis(){}
+    //maintain lower right triangle matrix
+    //should be used when max xor required
+    //returns false when mask already present in vector space
+    bool insertVectorLT(bitset<SIZE> mask)
+    {
+        for(int i=SIZE-1;i>=0;--i)
+        {
+            if(!mask[i])
+                continue;
+            if(basis[i].none())
+            {
+                basis[i]=mask;
+                ++size;
+                return true;
+            }
+            mask^=basis[i];
+        }
+        return false;
+    }
+    bool checkLT(bitset<SIZE> mask)
+    {
+        for(int i=SIZE-1;i>=0;--i)
+        {
+            if(!mask[i])
+                continue;
+            if(basis[i].none())
+                return false;
+            mask^=basis[i];
+        }
+        return true;
+    }
+    //returns a bitmask such that xor of basis[setbit]=mask
+    //checkLT(mask) should be true before calling this function
+    bitset<SIZE> linearCombiLT(bitset<SIZE> mask)
+    {
+        bitset<SIZE> res;
+        for(int i=SIZE-1;i>=0;--i)
+        {
+            if(!mask[i])
+                continue;
+            mask^=basis[i];
+            res.set(i);
+        }
+        return res;
+    }
+    bitset<SIZE> max()
+    {
+        bitset<SIZE> res;
+        for(int i=SIZE-1;i>=0;--i)
+        {
+            if(res[i])
+                continue;
+            res^=basis[i];
+        }
+        return res;
+    }
+    bitset<SIZE>& operator[](int indx)
+    {
+        return basis[indx];
+    }
+    void clear()
+    {
+        for(int i=0;i<SIZE;++i)
+        {
+            basis[i].reset();
+        }
+        size=0;
+    }
+};
+/*******************************************************/
