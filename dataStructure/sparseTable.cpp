@@ -67,30 +67,32 @@ class SparseTable
 {
     T table[n][l];
     int logTable[n+1];
-    template<class T2>
-    void init(T2 data,int len)
+    template<class iterator>
+    void init(iterator start,int len)
     {
-        table[0][0]=data[0];
+        table[0][0]=*start;
         logTable[0]=-1;
+        ++start;
         for(int i=1;i<len;i++)
         {
-            table[i][0]=data[i];
+            table[i][0]=*start;
+            ++start;
             logTable[i]=logTable[i/2]+1;
         }
         logTable[len]=logTable[len/2]+1;
     }
 public:
     SparseTable(){}
-    template<class T2>
-    SparseTable(T2 data,int len)///data either T* or vector<T>&
+    template<class iterator>
+    SparseTable(iterator begin,iterator end)
     {
-        init(data,len);
+        init(begin,(end-begin));
         build();
     }
-    template<class T2>
-    void rebuild(T2 data,int len)
+    template<class iterator>
+    void rebuild(iterator begin,iterator end)
     {
-        init(data,len);
+        init(begin,(end-begin));
         build();
     }
     void build()
