@@ -177,18 +177,21 @@ int get_all_factor(vector<ll>& pf,vector<ll>& pfp,int sz,vector<ll> &vct,vector<
     return s;
 }
 /********nck mod p**********/
-ll *fact,p;
+ll *fact,*factinv;
+const ll p=1000000007;
 void build(int n){
     fact=new ll[n+1];
-    fact[0]=1;
+    factinv=new ll[n+1];
+    fact[0]=factinv[0]=1;
     for(int i=1;i<=n;i++){
         fact[i]=(fact[i-1]*(ll)i)%p;
+        factinv[i]=n_inverse_mod_m(fact[i],p);
     }
     return;
 }
 ll nck_mod_p(int n,int k){
-    ll ans=(fact[n]*n_inverse_mod_m(fact[k],p))%p;
-    ans=(ans*n_inverse_mod_m(fact[n-k],p))%p;
+    ll ans=(fact[n]*factinv[k])%p;
+    ans=(ans*factinv[n-k])%p;
     return ans;
 }
 
