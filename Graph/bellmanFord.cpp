@@ -79,6 +79,35 @@ bool detectNegCycle(int n)
     negCycle.push_back(c);
     reverse(negCycle.begin(),negCycle.end());
     return true;
-
 }
+///another implementation
+bool BellmanFord(vector<vector<pair<int,int> > >&g,vector<int>& parent,vector<int>&sol,int s)
+{
+    fill(sol.begin(),sol.end(),INT_MAX>>1);
+    sol[s]=0;
+    int n=(int)g.size();
+    for(int i=0;i<n;++i)
+        parent[i]=i;
+    bool c=false;
+    for(int i=0;i<n;i++)
+    {
+        c=false;
+        for(int j=0;j<n;j++)
+        {
+         for(pair<int,int> e:g[j])
+            {
+                if(sol[j]+e.second<sol[e.first])
+                {
+                    sol[e.first]=sol[j]+e.second;
+                    parent[e.first]=j;
+                    c=true;
+                }
+            }
+        }
+        if(!c)
+            break;
+    }
+    return !c;
+}
+/******************************************/
 
