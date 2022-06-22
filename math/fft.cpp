@@ -65,8 +65,7 @@ vector<ll> mult(vector<int>& a,vector<int>& b)
 
 ///*********************************************///
 ///********iterative version,faster*****************///
-
-namespace FFT{
+namespace fft{
     //typedef complex<double> CD;
     struct CD {
         double x, y;
@@ -149,6 +148,21 @@ namespace FFT{
         for(int i=0;i<n;++i)
             ans[i]=round(fa[i].real());
         return ans;
+    }
+    vector<CD> multiply(vector<CD> &a,vector<CD>& b)
+    {
+        int n=1;
+        while(n<a.size()+b.size())
+            n=n<<1;
+        vector<CD> fa(a.begin(),a.end()),fb(b.begin(),b.end());
+        fa.resize(n);
+        fb.resize(n);
+        fft(fa);
+        fft(fb);
+        for(int i=0;i<n;++i)
+            fa[i]=fa[i]*fb[i];
+        fft(fa,true);
+        return fa;
     }
 }
 ///*********************************************///
