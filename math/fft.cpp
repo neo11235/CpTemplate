@@ -166,3 +166,16 @@ namespace fft{
     }
 }
 ///*********************************************///
+//d is the prefix sum of a={0,.....}
+vll allPossibleSubSum(vll d)
+{
+    vll a(d.back()+1,0),b(d.back()+1,0);
+    int l=d.back();
+    for(auto e:d)
+    {
+        ++b[e];
+        ++a[l-e];
+    }
+    vll out=fft::multiply(a,b);
+    return vector<ll>(out.begin()+l,out.end());
+}
