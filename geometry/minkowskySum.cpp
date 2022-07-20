@@ -46,3 +46,20 @@ vector<pt> minkowski(vector<pt> P,vector<pt> Q)//p and q is assumed to be sorted
     }
     return res;
 }
+//some useful function
+bool cw(pt& a,pt&b,pt&c){
+    return a.x*(b.y-c.y)+b.x*(c.y-a.y)+c.x*(a.y-b.y)<=0;
+}
+bool ccw(pt& a,pt&b,pt&c){
+    return a.x*(b.y-c.y)+b.x*(c.y-a.y)+c.x*(a.y-b.y)>=0;
+}
+double minDis0(pt a,pt b)
+{
+    double ans=min(sqrt((double)a.x*a.x+a.y*a.y),
+                   sqrt((double)b.x*b.x+b.y*b.y));
+    if((a.x-b.x)*a.x+(a.y-b.y)*a.y>=0)
+    {
+        ans=min(ans,((double)(a.x*b.y-b.x*a.y))/sqrt(sqr(a.x-b.x)+sqr(a.y-b.y)));
+    }
+    return ans;
+}
