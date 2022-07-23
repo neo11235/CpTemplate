@@ -20,3 +20,15 @@ vector<ll> FWHT(vector<ll> P, bool inverse) {
 
     return P;
 }
+vector<ll> xorConvo(vector<ll> a,vector<ll> b)
+{
+    int n=a.size();
+    assert(!(n&(n-1)));
+    a=FWHT(a);
+    b=FWHT(b);
+    for(int i=0;i<n;++i)
+    {
+        a[i]*=b[i];
+    }
+    return FWHT(a,true);
+}
