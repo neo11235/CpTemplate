@@ -1,18 +1,18 @@
 template<class T>
-class segTree// point update range query
+class SegTree// point update range query
 {
 public:
     T* sgt;
     int n;
     T (*combine)(T,T);
-    segTree(T (*combine)(T,T),int sz)
+    SegTree(T (*combine)(T,T),int sz)
     {
         n=sz;
         sgt=new T[4*sz];
         memset(sgt,0,sizeof(T)*4*sz);
         this->combine=combine;
     }
-    segTree(T (*combine)(T,T),T* data,int sz)
+    SegTree(T (*combine)(T,T),T* data,int sz)
     {
         n=sz;
         sgt=new T[4*sz];
@@ -70,7 +70,7 @@ public:
 
 
 template<class T,class dT>
-class segTree// point update range query
+class SegTree// point update range query
 {
 public:
     T* sgt;
@@ -78,7 +78,7 @@ public:
     int n;
     T (*combine)(T,T);
     T (*dtToT)(dT);
-    segTree()
+    SegTree()
     {
         data=NULL;
         sgt=NULL;
@@ -86,7 +86,7 @@ public:
         dtToT=NULL;
         n=0;
     }
-    segTree(T (*combine)(T,T),T (*dtToT)(dT),int sz)
+    SegTree(T (*combine)(T,T),T (*dtToT)(dT),int sz)
     {
         n=sz;
         sgt=new T[4*sz];
@@ -95,7 +95,7 @@ public:
         this->combine=combine;
         this->dtToT=dtToT;
     }
-    segTree(T (*combine)(T,T),T (*dtToT)(dT),dT* data,int sz)
+    SegTree(T (*combine)(T,T),T (*dtToT)(dT),dT* data,int sz)
     {
         n=sz;
         sgt=new T[4*sz];
@@ -159,7 +159,7 @@ public:
     {
         return query(1,0,n-1,l,r);
     }
-    ~segTree()
+    ~SegTree()
     {
         if(sgt!=NULL)
             delete[] sgt;
