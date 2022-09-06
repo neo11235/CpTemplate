@@ -436,6 +436,11 @@ namespace AC{
             nMatch[trie[v].vlink]+=nMatch[v];
         }
     }
+    //compute number of occurrence of each of the string added to the trie
+    //store the result to ans[]
+    //call constructAutomation() before calling this function
+    //important: careful about multiple occurrence of same string in the trie
+    //trie can only hold id for 1 string
     void computeAllMatch(const string& s)
     {
         int v=0;
