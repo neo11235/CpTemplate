@@ -250,3 +250,121 @@ public:
             delete[] sgt;
     }
 };
+//tree walking
+template<class T>
+class SegTree// point update range query
+{
+public:
+    T* sgt;
+    int n;
+    T (*combine)(T,T);
+    SegTree(T (*combine)(T,T),int sz)
+    {
+        n=sz;
+        sgt=new T[4*sz];
+        memset(sgt,0,sizeof(T)*4*sz);
+        this->combine=combine;
+    }
+    SegTree(T (*combine)(T,T),vector<T>& data,int sz)
+    {
+        n=sz;
+        sgt=new T[4*sz];
+        this->combine=combine;
+        build(data,1,0,n-1);
+    }
+
+    void build(vector<T>& data,int v,int vl,int vr)
+    {
+        if(vl==vr)
+        {
+            sgt[v]=data[vl];
+            return;
+        }
+        int mid=(vl+vr)/2;
+        build(data,2*v,vl,mid);
+        build(data,2*v+1,mid+1,vr);
+        sgt[v]=combine(sgt[2*v],sgt[2*v+1]);
+    }
+    void update(int v,int vl,int vr,int pos,T el)
+    {
+        if(vl==vr)
+        {
+            sgt[v]=el;
+            return;
+        }
+        int mid=(vl+vr)/2;
+        if(pos<=mid)
+            update(2*v,vl,mid,pos,el);
+        else
+            update(2*v+1,mid+1,vr,pos,el);
+        sgt[v]=combine(sgt[2*v],sgt[2*v+1]);
+    }
+    void update(int pos,T el)
+    {
+        update(1,0,n-1,pos,el);
+    }
+    T query(int v,int vl,int vr,int l,int r)
+    {
+        if(vl==l&&vr==r)
+            return sgt[v];
+        int mid=(vl+vr)/2;
+        if(r<=mid)
+            return query(2*v,vl,mid,l,r);
+        else if(l>mid)
+            return query(2*v+1,mid+1,vr,l,r);
+        else
+            return combine(query(2*v,vl,mid,l,mid),query(2*v+1,mid+1,vr,mid+1,r));
+    }
+    int getLast(int v,int vl,int vr,int l,int r,int val)//last element in interval[l,r] which is less than val
+    {
+        int mid=(vl+vr)/2;
+        if(vl==l&&vr==r)
+        {
+
+            if(sgt[v]>=val)
+                return INT_MIN;
+            if(vl==vr)
+                return vl;
+            if(sgt[2*v+1]<val)
+                return getLast(2*v+1,mid+1,vr,mid+1,vr,val);
+            return getLast(2*v,vl,mid,vl,mid,val);
+        }
+        if(r<=mid)
+            return getLast(2*v,vl,mid,l,r,val);
+        else if(l>mid)
+            return getLast(2*v+1,mid+1,vr,l,r,val);
+        return max(getLast(2*v,vl,mid,l,mid,val),getLast(2*v+1,mid+1,vr,mid+1,r,val));
+    }
+    int getFirst(int v,int vl,int vr,int l,int r,int val)//first element in interval[l,r] which is less than val
+    {
+
+        int mid=(vl+vr)/2;
+        if(vl==l&&vr==r)
+        {
+            if(sgt[v]>=val)
+                return INT_MAX;
+            if(vl==vr)
+                return vl;
+            if(sgt[2*v]<val)
+                return getFirst(2*v,vl,mid,vl,mid,val);
+            return getFirst(2*v+1,mid+1,vr,mid+1,vr,val);
+        }
+        if(r<=mid)
+            return getFirst(2*v,vl,mid,l,r,val);
+        else if(l>mid)
+            return getFirst(2*v+1,mid+1,vr,l,r,val);
+        return min(getFirst(2*v,vl,mid,l,mid,val),getFirst(2*v+1,mid+1,vr,mid+1,r,val));
+    }
+    int getLast(int l,int r,int val)
+    {
+        return getLast(1,0,n-1,l,r,val);
+    }
+    int getFirst(int l,int r,int val)
+    {
+        return getFirst(1,0,n-1,l,r,val);
+    }
+    T query(int l,int r)
+    {
+        return query(1,0,n-1,l,r);
+    }
+};
