@@ -82,3 +82,50 @@ namespace LCA{
         return rval;
     }
 }
+///just lca O(logn)
+namespace LCA{
+    const int max_size=400000;
+    const int len=20;
+    int up[max_size][len+1];
+    int tin[max_size];
+    int tout[max_size];
+    int timer;
+    vector<vector<int > > g;
+    void DFS(int node,int parent);
+    void init()
+    {
+        int n=g.size();
+        memset(tin,0,sizeof(tin));
+        memset(tout,0,sizeof(tout));
+        timer=0;
+        for(int i=0;i<n;++i)
+        {
+            if(!tin[i])
+                DFS(i,i);
+        }
+    }
+    void DFS(int node,int parent){
+        tin[node]=++timer;
+        up[node][0]=parent;
+        int i;
+        for(i=1;i<=len;i++){
+            up[node][i]=up[up[node][i-1]][i-1];
+        }
+        for(auto e:g[node]){
+            if(e!=parent)DFS(e,node);
+        }
+        tout[node]=++timer;
+        return;
+    }
+    bool is_ancestor(int u,int v){//if u is an ancestor of v
+        return tin[u]<=tin[v]&&tout[u]>=tout[v];
+    }
+    int lca(int u,int v){
+        if(is_ancestor(u,v))return u;
+        if(is_ancestor(v,u))return v;
+        for(int i=len;i>=0;i--){
+            if(!is_ancestor(up[u][i],v))u=up[u][i];
+        }
+        return up[u][0];
+    }
+}
