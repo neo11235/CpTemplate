@@ -1,15 +1,15 @@
 
 ///O(n^3) v bad brute force implementation,implement better algorithm later
 template<class T>
-int area(pair<T,T>& p1,pair<T,T>& p2,pair<T,T>& p3){
+T area(pair<T,T>& p1,pair<T,T>& p2,pair<T,T>& p3){
     return (p1.first*p2.second+p2.first*p3.second+p3.first*p1.second
             -p1.second*p2.first-p2.second*p3.first-p3.second*p1.first);
 }
 template<class T>
 bool inside(pair<T,T>& a,pair<T,T>& b,pair<T,T>& c,pair<T,T>& p)
 {
-    int ar=abs(area(a,b,c));
-    int t=abs(area(a,b,p))+abs(area(b,c,p))+abs(area(c,a,p));
+    T ar=abs(area(a,b,c));
+    T t=abs(area(a,b,p))+abs(area(b,c,p))+abs(area(c,a,p));
     return ar==t;
 }
 template<class T>
