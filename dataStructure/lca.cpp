@@ -89,36 +89,48 @@ namespace LCA{
     int up[max_size][len+1];
     int tin[max_size];
     int tout[max_size];
+    int dep[max_size];
     int timer;
     vector<vector<int > > g;
-    void DFS(int node,int parent);
+    void DFS(int node,int parent,int);
     void init()
     {
         int n=g.size();
-        memset(tin,0,sizeof(tin));
-        memset(tout,0,sizeof(tout));
+        memset(tin,0,sizeof(int)*n);
+        memset(tout,0,sizeof(int)*n);
         timer=0;
         for(int i=0;i<n;++i)
         {
             if(!tin[i])
-                DFS(i,i);
+                DFS(i,i,0);
         }
     }
-    void DFS(int node,int parent){
+    void DFS(int node,int parent,int dp=0){
         tin[node]=++timer;
         up[node][0]=parent;
+        dep[node]=dp;
         int i;
         for(i=1;i<=len;i++){
             up[node][i]=up[up[node][i-1]][i-1];
         }
         for(auto e:g[node]){
-            if(e!=parent)DFS(e,node);
+            if(e!=parent)DFS(e,node,dp+1);
         }
         tout[node]=++timer;
         return;
     }
     bool is_ancestor(int u,int v){//if u is an ancestor of v
         return tin[u]<=tin[v]&&tout[u]>=tout[v];
+    }
+    int kth_ancestor(int u,int k){//if k>=number of ancestor returns root
+        for(int i=len;i>=0;--i){
+            if(!k)break;
+            if((1<<i)>k)
+                continue;
+            u=up[u][i];
+            k-=(1<<i);
+        }
+        return u;
     }
     int lca(int u,int v){
         if(is_ancestor(u,v))return u;
