@@ -4,13 +4,13 @@
 ///query O(1)
 ///queryDisjoint O(logn)
 template<class T>
-class sparseTable
+class SparseTable
 {
     T** table;
-    ll (*combine)(T,T);
+    T (*combine)(T,T);
     int n,l;
 public:
-    sparseTable(int n,int l,vector<T>&data,ll (*combine)(T,T))
+    SparseTable(int n,int l,vector<T>&data,T (*combine)(T,T))
     {
         this->n=n;
         this->l=l;
@@ -24,7 +24,7 @@ public:
         build();
 
     }
-    sparseTable(int n,int l,T* data,ll (*combine)(T,T))
+    SparseTable(int n,int l,T* data,T (*combine)(T,T))
     {
         this->n=n;
         this->l=l;
